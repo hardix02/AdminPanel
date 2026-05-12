@@ -21,6 +21,7 @@ const toPayload = (record) => {
         heartbeatStatus: record.heartbeatStatus,
         lastHeartbeatAt: record.lastHeartbeatAt,
         notes: record.notes,
+        oneTimeUse: record.oneTimeUse,
         createdAt: record.createdAt,
         updatedAt: record.updatedAt,
     };
@@ -156,6 +157,36 @@ exports.extendAlgoAccess = async (req, res, next) => {
             success: true,
             data: toPayload(record),
         });
+    
+    } catch (err) {
+        next(err);
+    }
+};
+
+exports.getAlgoAccessDetails = async (req, res, next) => {
+    try {
+        const { accountId, algoName } = req.params;
+
+        const record = await AlgoAccess.findOne({ accountId, algoName });
+
+        if (!record) {
+            return res.status(404).json({ message: 'Algo access record not found for the given account ID and algo name' });
+        }
+
+        const expiresOn = new Date(record.expiresOn);
+        const y = expiresOn.getFullYear();
+        const m = String(expiresOn.getMonth() + 1).padStart(2, '0');
+        const d = String(expiresOn.getDate()).padStart(2, '0');
+        const h = String(expiresOn.getHours()).padStart(2, '0');
+        const min = String(expiresOn.getMinutes()).padStart(2, '0');
+        const s = String(expiresOn.getSeconds()).padStart(2, '0');
+
+        res.status(200).json({
+            isActive: ['active', 'expiring-soon'].includes(record.status),
+            expiryDateTime: `${y}.${m}.${d} ${h}:${min}:${s}`,
+            authorisedAccountNumber: record.accountId,
+            oneTimeUse: record.oneTimeUse,
+        });
     } catch (err) {
         next(err);
     }
@@ -172,57 +203,6 @@ exports.deleteAlgoAccess = async (req, res, next) => {
         res.status(200).json({
             success: true,
             data: {},
-        });
-    } catch (err) {
-        next(err);
-    }
-};
-
-
-// ✅ Check Algo Access by Account Number & Algo Name
-exports.checkAlgoAccess = async (req, res, next) => {
-    try {
-        const { accountNumber, algoName } = req.query;
-
-        if (!accountNumber || !algoName) {
-            return res.status(400).json({
-                success: false,
-                message: 'accountNumber and algoName are required',
-            });
-        }
-
-        // Find matching record
-        const record = await AlgoAccess.findOne({
-            accountId: accountNumber,
-            algoName: algoName,
-        });
-
-        if (!record) {
-            return res.status(404).json({
-                success: false,
-                message: 'No access found for this account and algo',
-            });
-        }
-
-        const now = new Date();
-        const expiryDate = new Date(record.expiresOn);
-
-        // Determine if active
-        const isActive =
-            record.status === 'active' &&
-            expiryDate > now;
-
-        res.status(200).json({
-            success: true,
-            data: {
-                isActive: isActive,
-                expiryDateTime: expiryDate
-                    .toISOString()
-                    .replace('T', ' ')
-                    .split('.')[0],
-                authorisedAccountNumber: record.accountId,
-                oneTimeUse: record.oneTimeUse || false, // make sure field exists in model
-            },
         });
     } catch (err) {
         next(err);

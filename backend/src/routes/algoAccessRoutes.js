@@ -5,29 +5,37 @@ const {
     updateAlgoAccess,
     toggleAlgoAccessStatus,
     extendAlgoAccess,
-    algoAccessRoutes,
     deleteAlgoAccess,
+    getAlgoAccessDetails,
 } = require('../controllers/algoAccessController');
 const { protect, authorize } = require('../middleware/auth');
 
-const router = express.Router();
+// Authenticated routes
+const authRouter = express.Router();
+authRouter.use(protect);
+authRouter.use(authorize('admin', 'superadmin'));
 
-router.use(protect);
-router.use(authorize('admin', 'superadmin'));
-
-router
+authRouter
     .route('/')
     .get(getAlgoAccessList)
     .post(createAlgoAccess);
 
-router.patch('/:id/toggle-status', toggleAlgoAccessStatus);
-router.patch('/:id/extend', extendAlgoAccess);
-
-router.get('/check-access', checkAlgoAccess);
-
-router
+authRouter.patch('/:id/toggle-status', toggleAlgoAccessStatus);
+authRouter.patch('/:id/extend', extendAlgoAccess);
+    
+authRouter
     .route('/:id')
     .put(updateAlgoAccess)
     .delete(deleteAlgoAccess);
 
-module.exports = router;
+// Public routes
+const publicRouter = express.Router();
+publicRouter.get('/:accountId/:algoName', (req, res, next) => {
+    console.log('Public route hit:', req.params);
+    next();
+}, getAlgoAccessDetails);
+
+module.exports = {
+    authAlgoAccessRouter: authRouter,
+    publicAlgoAccessRouter: publicRouter,
+};

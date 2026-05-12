@@ -61,6 +61,10 @@ const algoAccessSchema = new mongoose.Schema(
             trim: true,
             default: '',
         },
+        oneTimeUse: {
+            type: Boolean,
+            default: false,
+        },
     },
     {
         timestamps: true,

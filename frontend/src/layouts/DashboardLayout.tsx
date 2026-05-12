@@ -18,8 +18,10 @@ const DashboardLayout = () => {
     .join('')
     .slice(0, 2)
     .toUpperCase() ?? 'AD';
+  
   const title = location.pathname === '/users' ? 'User Management' : 'Algo Access Dashboard';
   const note = location.pathname === '/users' ? 'User administration' : 'EX5 operations';
+
 
   const handleLogout = () => {
     logout();
