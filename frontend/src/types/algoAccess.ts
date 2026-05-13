@@ -14,6 +14,7 @@ export type AlgoAccessRecord = {
   status: AlgoStatus;
   heartbeatStatus: 'online' | 'offline' | 'delayed';
   lastHeartbeatAt: string;
+  oneTimeUse: boolean;
   notes: string;
   createdAt: string;
   updatedAt: string;

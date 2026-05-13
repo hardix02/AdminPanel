@@ -41,9 +41,18 @@ const Login = () => {
       setAuth(response.user, response.token);
       toast.success('Successfully logged in!');
     } catch (error) {
-      const message = axios.isAxiosError(error)
-        ? (error.response?.data?.message as string | undefined) ?? 'Unable to reach the login service.'
-        : 'Login failed. Please try again.';
+      let message: string;
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          message = (error.response.data?.message as string) || `Server error (${error.response.status})`;
+        } else if (error.request) {
+          message = 'Unable to reach the server. Is the backend running?';
+        } else {
+          message = 'Request failed. Please try again.';
+        }
+      } else {
+        message = 'Login failed. Please try again.';
+      }
 
       setError('root', { message });
       toast.error(message);

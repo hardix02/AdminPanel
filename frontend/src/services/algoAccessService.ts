@@ -21,7 +21,7 @@ type AlgoAccessPayload = {
   startedOn: string;
   expiresOn: string;
   status: string;
-  heartbeatStatus: string;
+  oneTimeUse: boolean;
   notes: string;
 };
 
@@ -42,10 +42,5 @@ export const deleteAlgoAccess = async (id: string) => {
 
 export const toggleAlgoAccessStatus = async (id: string) => {
   const { data } = await apiClient.patch(`/algo-access/${id}/toggle-status`);
-  return data;
-};
-
-export const extendAlgoAccess = async (id: string, days = 30) => {
-  const { data } = await apiClient.patch(`/algo-access/${id}/extend`, { days });
   return data;
 };
