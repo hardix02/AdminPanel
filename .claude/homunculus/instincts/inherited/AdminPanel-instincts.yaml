@@ -1,0 +1,410 @@
+# Instincts generated from https://github.com/hardix02/AdminPanel
+# Generated: 2026-05-13T06:38:19.896Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: AdminPanel-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Commit Length
+
+## Action
+
+Write moderate-length commit messages (~86 characters)
+
+## Evidence
+
+- Average commit message length: 86 chars
+- Based on 3 commits
+
+---
+id: AdminPanel-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Naming Files
+
+## Action
+
+Use camelCase naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: camelCase
+
+---
+id: AdminPanel-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: AdminPanel-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Export Style
+
+## Action
+
+Prefer mixed exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: mixed
+
+---
+id: AdminPanel-arch-type-based
+trigger: "when adding new code"
+confidence: 0.8
+domain: architecture
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Arch Type Based
+
+## Action
+
+Place code in the appropriate type folder (components/, services/, utils/, etc.)
+
+## Evidence
+
+- Type-based module organization detected
+- Folders: 
+
+---
+id: AdminPanel-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: AdminPanel-workflow-add-or-update-algo-access-feature
+trigger: "when doing add or update algo access feature"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Workflow Add Or Update Algo Access Feature
+
+## Action
+
+Follow the add-or-update-algo-access-feature workflow:
+1. Create or update backend controller, model, and route for Algo Access
+2. Update or add backend service logic (e.g., seed data)
+3. Update frontend page for Algo Access
+4. Update or add frontend service and types for Algo Access
+5. Update frontend configuration if needed
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: backend/src/controllers/algoAccessController.js, backend/src/models/AlgoAccess.js, backend/src/routes/algoAccessRoutes.js
+
+---
+id: AdminPanel-workflow-dashboard-layout-or-component-update
+trigger: "when doing dashboard layout or component update"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/hardix02/AdminPanel
+---
+
+# AdminPanel Workflow Dashboard Layout Or Component Update
+
+## Action
+
+Follow the dashboard-layout-or-component-update workflow:
+1. Update or remove dashboard layout file(s)
+2. Update or remove related dashboard/page components
+3. Update main App entry if necessary
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: frontend/src/layouts/DashboardLayout.tsx, frontend/src/pages/dashboard/Dashboard.tsx, frontend/src/pages/users/Users.tsx
+
+---
+id: adminpanel-instinct-file-naming
+trigger: "When creating or renaming a file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct File Naming
+
+## Action
+
+Use camelCase for file names
+
+## Evidence
+
+- Pattern in files: frontend/src/pages/AlgoAccess.tsx
+- frontend/src/services/algoAccessService.ts
+
+---
+id: adminpanel-instinct-function-naming
+trigger: "When defining a function"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Function Naming
+
+## Action
+
+Use camelCase for function names
+
+## Evidence
+
+- Pattern in TypeScript codebase
+- Naming convention in codeStyle analysis
+
+---
+id: adminpanel-instinct-class-naming
+trigger: "When defining a class"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Class Naming
+
+## Action
+
+Use PascalCase for class names
+
+## Evidence
+
+- Pattern in files: backend/src/models/AlgoAccess.js
+
+---
+id: adminpanel-instinct-constant-naming
+trigger: "When declaring a constant"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Constant Naming
+
+## Action
+
+Use SCREAMING_SNAKE_CASE for constant names
+
+## Evidence
+
+- Naming convention in codeStyle analysis
+
+---
+id: adminpanel-instinct-import-style
+trigger: "When importing modules"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Import Style
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- Import style in codeStyle analysis
+
+---
+id: adminpanel-instinct-export-style
+trigger: "When exporting modules or functions"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Export Style
+
+## Action
+
+Use mixed export style (default and named exports as appropriate)
+
+## Evidence
+
+- Export style in codeStyle analysis
+
+---
+id: adminpanel-instinct-testing-location
+trigger: "When adding or updating tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Testing Location
+
+## Action
+
+Place test files in a separate directory from source code
+
+## Evidence
+
+- testLocation: separate in architecture analysis
+
+---
+id: adminpanel-instinct-testing-pattern
+trigger: "When writing tests"
+confidence: 0.7
+domain: testing
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Testing Pattern
+
+## Action
+
+Write tests for both backend and frontend modules, following type-based organization
+
+## Evidence
+
+- moduleOrganization: type-based
+- commonFolders: frontend, backend
+
+---
+id: adminpanel-instinct-commit-prefix
+trigger: "When writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Commit Prefix
+
+## Action
+
+Start commit message with 'feat:' for features or 'chore:' for maintenance/cleanup
+
+## Evidence
+
+- Seen in commit: feat: simplified admin dashboard...
+- Seen in commit: chore: remove unused legacy dashboard...
+
+---
+id: adminpanel-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.7
+domain: git
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Commit Length
+
+## Action
+
+Write descriptive commit messages averaging 80-90 characters
+
+## Evidence
+
+- averageLength: 86 in commit analysis
+
+---
+id: adminpanel-instinct-add-or-update-algo-access-feature
+trigger: "When someone wants to add or modify the Algo Access functionality (API, data model, frontend integration)"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Add Or Update Algo Access Feature
+
+## Action
+
+Update or create backend controller, model, and route for Algo Access, update backend service logic, update frontend page, service, and types for Algo Access, and update frontend configuration if needed
+
+## Evidence
+
+- Workflow: add-or-update-algo-access-feature
+- Commits and files: backend/src/controllers/algoAccessController.js, frontend/src/pages/AlgoAccess.tsx
+
+---
+id: adminpanel-instinct-dashboard-layout-update
+trigger: "When someone wants to change the dashboard layout, simplify UI, or remove unused dashboard components"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: hardix02/AdminPanel
+---
+
+# Adminpanel Instinct Dashboard Layout Update
+
+## Action
+
+Update or remove dashboard layout file(s), update or remove related dashboard/page components, and update main App entry if necessary
+
+## Evidence
+
+- Workflow: dashboard-layout-or-component-update
+- Commits and files: frontend/src/layouts/DashboardLayout.tsx, frontend/src/App.tsx
+
