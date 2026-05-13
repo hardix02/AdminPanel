@@ -41,12 +41,13 @@ app.use(compression());
 // Route files
 const auth = require('./routes/authRoutes');
 const users = require('./routes/userRoutes');
-const algoAccess = require('./routes/algoAccessRoutes');
+const { authAlgoAccessRouter, publicAlgoAccessRouter } = require('./routes/algoAccessRoutes');
 
 // Mount routers
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
-app.use('/api/v1/algo-access', algoAccess);
+app.use('/api/v1/algo-access/public', publicAlgoAccessRouter); // Mount public routes first
+app.use('/api/v1/algo-access', authAlgoAccessRouter); // Then mount authenticated routes
 
 // Routes
 app.get('/', (req, res) => {

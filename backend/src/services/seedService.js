@@ -15,6 +15,7 @@ const defaultAlgoRecords = [
         heartbeatStatus: 'online',
         lastHeartbeatAt: new Date(),
         notes: 'Primary momentum account',
+        oneTimeUse: false,
     },
     {
         userName: 'Ananya Mehta',
@@ -29,20 +30,22 @@ const defaultAlgoRecords = [
         heartbeatStatus: 'delayed',
         lastHeartbeatAt: new Date(Date.now() - 9 * 60 * 1000),
         notes: 'Needs renewal follow-up',
+        oneTimeUse: false,
     },
     {
         userName: 'Karan Verma',
         email: 'karan@northstar.io',
-        accountId: 'MT5-800255',
+        accountId: '52774303',
         algoName: 'EX5 Gold Sniper',
         purchasedPlan: '180 Days',
         durationDays: 180,
         startedOn: new Date('2026-01-10'),
         expiresOn: new Date('2026-07-09'),
-        status: 'inactive',
-        heartbeatStatus: 'offline',
-        lastHeartbeatAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
-        notes: 'Paused by admin',
+        status: 'active',
+        heartbeatStatus: 'online',
+        lastHeartbeatAt: new Date(),
+        notes: '',
+        oneTimeUse: false,
     },
     {
         userName: 'Sneha Iyer',
@@ -57,6 +60,7 @@ const defaultAlgoRecords = [
         heartbeatStatus: 'online',
         lastHeartbeatAt: new Date(),
         notes: 'Long-term premium plan',
+        oneTimeUse: false,
     },
 ];
 
