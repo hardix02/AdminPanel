@@ -1,0 +1,6 @@
+interface:
+  display_name: "AdminPanel"
+  short_description: "Repo-specific patterns and workflows for AdminPanel"
+  default_prompt: "Use the AdminPanel repo skill to follow existing architecture, testing, and workflow conventions."
+policy:
+  allow_implicit_invocation: true
