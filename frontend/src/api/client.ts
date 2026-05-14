@@ -17,3 +17,16 @@ apiClient.interceptors.request.use((config) => {
 
   return config;
 });
+
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (axios.isAxiosError(error) && error.response?.status === 401) {
+      // Token expired or invalid
+      localStorage.removeItem('token');
+      // Force a page refresh to trigger the auth check and redirect to login
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
