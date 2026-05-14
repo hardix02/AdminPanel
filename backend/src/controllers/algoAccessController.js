@@ -40,7 +40,7 @@ const getSummary = async () => {
 
 exports.getAlgoAccessList = async (req, res, next) => {
     try {
-        const { search = '', status = 'all' } = req.query;
+        const { search = '', status = 'all', algoName = 'all' } = req.query;
         const query = {};
 
         if (search) {
@@ -54,6 +54,10 @@ exports.getAlgoAccessList = async (req, res, next) => {
 
         if (status && status !== 'all') {
             query.status = status;
+        }
+
+        if (algoName && algoName !== 'all') {
+            query.algoName = algoName;
         }
 
         const records = await AlgoAccess.find(query).sort({ expiresOn: 1, createdAt: -1 });

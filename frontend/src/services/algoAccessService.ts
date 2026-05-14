@@ -4,6 +4,7 @@ import type { AlgoAccessListResponse, AlgoAccessRecord } from '../types/algoAcce
 type FetchAlgoAccessParams = {
   search?: string;
   status?: string;
+  algoName?: string;
 };
 
 export const fetchAlgoAccessList = async (params: FetchAlgoAccessParams) => {

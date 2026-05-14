@@ -33,3 +33,17 @@ export type AlgoAccessListResponse = {
   summary: AlgoAccessSummary;
   data: AlgoAccessRecord[];
 };
+
+export type Algorithm = {
+  _id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AlgorithmListResponse = {
+  success: boolean;
+  count: number;
+  data: Algorithm[];
+};

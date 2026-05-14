@@ -17,6 +17,7 @@ import {
   Trash2,
 } from 'lucide-react';
 import Modal from '../components/common/Modal';
+import Dropdown from '../components/common/Dropdown';
 import {
   createAlgoAccess,
   deleteAlgoAccess,
@@ -24,6 +25,7 @@ import {
   toggleAlgoAccessStatus,
   updateAlgoAccess,
 } from '../services/algoAccessService';
+import { fetchAlgorithms, createAlgorithm } from '../services/algorithmService';
 import { useAuthStore } from '../store/useAuthStore';
 import type { AlgoAccessRecord, AlgoStatus } from '../types/algoAccess';
 
@@ -105,10 +107,13 @@ const AlgoAccess = () => {
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | AlgoStatus>('all');
+  const [algoFilter, setAlgoFilter] = useState('all');
   const [isAlgoModalOpen, setIsAlgoModalOpen] = useState(false);
   const [algoModalMode, setAlgoModalMode] = useState<'create' | 'edit'>('create');
   const [selectedAlgo, setSelectedAlgo] = useState<AlgoAccessRecord | null>(null);
   const [algoForm, setAlgoForm] = useState<AlgoFormState>(emptyAlgoForm);
+  const [isAddingNewAlgo, setIsAddingNewAlgo] = useState(false);
+  const [newAlgoName, setNewAlgoName] = useState('');
   const deferredSearch = useDeferredValue(search);
 
   const initials = user?.name
@@ -121,11 +126,22 @@ const AlgoAccess = () => {
   /* ── queries / mutations ───────────────────────────────── */
 
   const dashboardQuery = useQuery({
-    queryKey: ['algo-access', deferredSearch, statusFilter],
-    queryFn: () => fetchAlgoAccessList({ search: deferredSearch, status: statusFilter }),
+    queryKey: ['algo-access', deferredSearch, statusFilter, algoFilter],
+    queryFn: () =>
+      fetchAlgoAccessList({
+        search: deferredSearch,
+        status: statusFilter,
+        algoName: algoFilter,
+      }),
+  });
+
+  const algorithmsQuery = useQuery({
+    queryKey: ['algorithms'],
+    queryFn: fetchAlgorithms,
   });
 
   const invalidateAlgoAccess = () => queryClient.invalidateQueries({ queryKey: ['algo-access'] });
+  const invalidateAlgorithms = () => queryClient.invalidateQueries({ queryKey: ['algorithms'] });
 
   const createMutation = useMutation({
     mutationFn: createAlgoAccess,
@@ -170,6 +186,18 @@ const AlgoAccess = () => {
     onError: (error) => toast.error(getApiErrorMessage(error, 'Unable to update algo status right now.')),
   });
 
+  const createAlgoMutation = useMutation({
+    mutationFn: (name: string) => createAlgorithm(name),
+    onSuccess: (response) => {
+      toast.success(`Algorithm "${response.data.name}" added.`);
+      setIsAddingNewAlgo(false);
+      setNewAlgoName('');
+      handleAlgoFormChange('algoName', response.data.name);
+      invalidateAlgorithms();
+    },
+    onError: (error) => toast.error(getApiErrorMessage(error, 'Unable to add algorithm.')),
+  });
+
   /* ── derived state ─────────────────────────────────────── */
 
   const records = dashboardQuery.data?.data ?? [];
@@ -200,6 +228,21 @@ const AlgoAccess = () => {
     ],
     [summary.active, summary.expiringSoon, summary.inactive]
   );
+
+  const statusOptions = [
+    { value: 'all', label: 'All status' },
+    { value: 'active', label: 'Active' },
+    { value: 'inactive', label: 'Inactive' },
+    { value: 'expiring-soon', label: 'Expiring soon' },
+  ];
+
+  const algoFilterOptions = [
+    { value: 'all', label: 'All Algos' },
+    ...(algorithmsQuery.data?.data.map((algo) => ({ value: algo.name, label: algo.name })) ?? []),
+  ];
+
+  const algoFormOptions =
+    algorithmsQuery.data?.data.map((algo) => ({ value: algo.name, label: algo.name })) ?? [];
 
   /* ── handlers ──────────────────────────────────────────── */
 
@@ -360,23 +403,35 @@ const AlgoAccess = () => {
                 />
               </label>
 
-              <select
-                className="table-select"
+              <Dropdown
+                className="table-dropdown"
+                options={statusOptions}
                 value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value as 'all' | AlgoStatus)}
-              >
-                <option value="all">All status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="expiring-soon">Expiring soon</option>
-              </select>
+                onChange={(val) => setStatusFilter(val as any)}
+              />
 
-              <button type="button" className="ghost-button" onClick={() => dashboardQuery.refetch()} disabled={dashboardQuery.isFetching}>
+              <Dropdown
+                className="table-dropdown"
+                options={algoFilterOptions}
+                value={algoFilter}
+                onChange={(val) => setAlgoFilter(val)}
+              />
+
+              <button
+                type="button"
+                className="ghost-button"
+                onClick={() => dashboardQuery.refetch()}
+                disabled={dashboardQuery.isFetching}
+              >
                 <RefreshCw size={16} className={dashboardQuery.isFetching ? 'spin-icon' : ''} />
                 <span>Refresh</span>
               </button>
 
-              <button type="button" className="ghost-button ghost-button-strong" onClick={openCreateModal}>
+              <button
+                type="button"
+                className="ghost-button ghost-button-strong"
+                onClick={openCreateModal}
+              >
                 <Plus size={16} />
                 <span>Add Algo</span>
               </button>
@@ -505,10 +560,49 @@ const AlgoAccess = () => {
                 <span className="input-label-text">Account ID</span>
                 <input className="field" placeholder="e.g. MT5-800241" value={algoForm.accountId} onChange={(event) => handleAlgoFormChange('accountId', event.target.value)} required />
               </label>
-              <label className="input-group">
-                <span className="input-label-text">Algo Name</span>
-                <input className="field" placeholder="e.g. EX5 Scalper X" value={algoForm.algoName} onChange={(event) => handleAlgoFormChange('algoName', event.target.value)} required />
-              </label>
+              <div className="input-group">
+                <div className="flex-row-between">
+                  <span className="input-label-text">Algo Name</span>
+                  <button
+                    type="button"
+                    className="icon-text-button-mini"
+                    onClick={() => setIsAddingNewAlgo(!isAddingNewAlgo)}
+                  >
+                    <Plus size={14} />
+                    <span>{isAddingNewAlgo ? 'Select existing' : 'Add New'}</span>
+                  </button>
+                </div>
+                {isAddingNewAlgo ? (
+                  <div className="flex-row-gap-2">
+                    <input
+                      className="field"
+                      placeholder="Enter new algo name"
+                      value={newAlgoName}
+                      onChange={(e) => setNewAlgoName(e.target.value)}
+                      autoFocus
+                    />
+                    <button
+                      type="button"
+                      className="btn-primary-mini"
+                      onClick={() => {
+                        if (newAlgoName.trim()) {
+                          createAlgoMutation.mutate(newAlgoName.trim());
+                        }
+                      }}
+                      disabled={createAlgoMutation.isPending}
+                    >
+                      Save
+                    </button>
+                  </div>
+                ) : (
+                  <Dropdown
+                    options={algoFormOptions}
+                    value={algoForm.algoName}
+                    onChange={(val) => handleAlgoFormChange('algoName', val)}
+                    placeholder="Select an algorithm"
+                  />
+                )}
+              </div>
               <label className="input-group">
                 <span className="input-label-text">Start Date</span>
                 <input className="field" type="date" value={algoForm.startedOn} onChange={(event) => handleAlgoFormChange('startedOn', event.target.value)} required />
